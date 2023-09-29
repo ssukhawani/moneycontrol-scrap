@@ -1,7 +1,11 @@
 const express = require("express");
 const multiPageScraper = require("../scrapFunds");
+const moment = require("moment-timezone");
 
 const router = express.Router();
+
+// Set the desired time zone (Asia/Kolkata for IST)
+moment.tz.setDefault("Asia/Kolkata");
 
 router.get("/", async (req, res, next) => {
   const { urls } = req.query;
@@ -18,7 +22,7 @@ router.get("/", async (req, res, next) => {
   // Sequentially scrape data from each URL
   for (const url of urlList) {
     const scrapedData = await multiPageScraper(url);
-    const currentTime = new Date().toLocaleString();
+    const currentTime = moment().format("LLLL");
     ans.push({ ...scrapedData, time: currentTime });
   }
 
